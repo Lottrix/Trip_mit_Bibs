@@ -68,7 +68,7 @@ button:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(255,255,255,
 .dot{width:14px;height:14px;border-radius:50%;background:#fff;opacity:0.6;cursor:pointer;transition:all 0.3s;}
 .dot.active{opacity:1;background:#764ba2;transform:scale(1.2);}
 
-/* Echtes Memory-Spiel */
+/* Perfektes Memory – nur Rückseite sichtbar! */
 .game-container{margin:30px 0;}
 .memory-grid{
   display:grid;
@@ -79,10 +79,9 @@ button:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(255,255,255,
 }
 .memory-card{
   aspect-ratio:3/4;
-  background:linear-gradient(135deg,#ff6b6b,#4ecdc4);
-  border-radius:12px;
   cursor:pointer;
   position:relative;
+  height:120px;
   transition:transform 0.6s ease;
   transform-style:preserve-3d;
   box-shadow:0 8px 20px rgba(0,0,0,0.3);
@@ -96,20 +95,23 @@ button:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(255,255,255,
 }
 .card-face{
   position:absolute;
-  inset:0;
+  width:100%;
+  height:100%;
   backface-visibility:hidden;
   display:flex;
   align-items:center;
   justify-content:center;
   border-radius:12px;
   font-size:2rem;
+  font-weight:bold;
 }
 .card-back{
   background:linear-gradient(135deg,#ff6b6b,#4ecdc4);
+  box-shadow:inset 0 0 20px rgba(255,255,255,0.2);
 }
 .card-front{
   background:rgba(255,255,255,0.95);
-  font-weight:bold;
+  transform:rotateY(180deg);
 }
 .game-text{font-size:1.3rem;margin:20px;}
 .progress{font-size:1.2rem;margin-top:10px;}
@@ -122,6 +124,7 @@ button:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(255,255,255,
 }
 @media (max-width:480px){
   .memory-grid{grid-template-columns:repeat(4,70px);gap:10px;}
+  .memory-card{height:95px;}
   .slide-container{height:300px;}
 }
 </style>
@@ -146,10 +149,10 @@ button:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(255,255,255,
   </div>
 
   <div id="game" class="hidden game-container">
-    <h1>🧠 Echtes Memory – Finde die Paare!</h1>
+    <h1>🧠 Memory – Nur Rückseiten!</h1>
     <p class="game-text">
-      Alle Karten verdeckt. Klicke zwei gleiche Symbole!<br>
-      ❤️ + unsere Erinnerungen warten.
+      Klicke zwei gleiche Karten. Symbole nur 1 Sek sichtbar!<br>
+      ❤️ Unser Geheimnis...
     </p>
     <div class="memory-grid" id="memoryGrid"></div>
     <p id="progressText" class="progress">Paare gefunden: 0 / 6</p>
@@ -223,7 +226,7 @@ function goToSlide(index){
   updateSlides();
 }
 
-// ----- Echtes Memory (perfekt animiert) -----
+// ----- Fix: Nur Rückseite sichtbar -----
 let flippedCards = [];
 let matchedPairs = 0;
 let lockBoard = false;
@@ -254,7 +257,7 @@ function initMemoryGame(){
     card.className = 'memory-card';
     card.dataset.symbol = symbol;
     card.innerHTML = `
-      <div class="card-face card-back"></div>
+      <div class="card-face card-back">?</div>
       <div class="card-face card-front">${symbol}</div>
     `;
     card.addEventListener('click', flipCard);
@@ -271,16 +274,6 @@ function flipCard(){
 
   this.classList.add('flipped');
   flippedCards.push(this);
-
-  if(flippedCards.length === 1){
-    // Erste Karte: 1 Sek sichtbar
-    setTimeout(() => {
-      if(flippedCards.length === 1){
-        flippedCards[0].classList.remove('flipped');
-        flippedCards = [];
-      }
-    }, 1000);
-  }
 
   if(flippedCards.length === 2){
     lockBoard = true;
@@ -301,11 +294,10 @@ function checkMatch(){
     lockBoard = false;
     
     if(matchedPairs === totalPairs){
-      winGame();
+      setTimeout(winGame, 500);
       return;
     }
   } else {
-    // Kein Match: Nach 1 Sek umdrehen
     setTimeout(() => {
       card1.classList.remove('flipped');
       card2.classList.remove('flipped');

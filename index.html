@@ -1,295 +1,350 @@
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Unser Wochenendtrip ❤️</title>
-
 <style>
-
 body{
-margin:0;
-font-family:Arial, sans-serif;
-background:linear-gradient(135deg,#667eea,#764ba2);
-color:white;
-text-align:center;
-min-height:100vh;
-padding:20px;
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:linear-gradient(135deg,#667eea,#764ba2);
+  color:white;
+  text-align:center;
+  min-height:100vh;
+  padding:20px;
 }
-
 .container{
-max-width:800px;
-margin:0 auto;
-padding:30px;
-background:rgba(255,255,255,0.1);
-backdrop-filter:blur(10px);
-border-radius:20px;
-box-shadow:0 20px 40px rgba(0,0,0,0.3);
+  max-width:800px;
+  margin:0 auto;
+  padding:30px;
+  background:rgba(255,255,255,0.1);
+  backdrop-filter:blur(10px);
+  border-radius:20px;
+  box-shadow:0 20px 40px rgba(0,0,0,0.3);
 }
-
+h1{font-size:clamp(1.6rem,4.5vw,2.2rem);margin-bottom:20px;}
+p{font-size:1.2rem;line-height:1.6;margin-bottom:20px;}
+button{
+  padding:15px 30px;border:none;border-radius:30px;font-size:18px;cursor:pointer;
+  background:white;color:#764ba2;margin:20px;font-weight:600;transition:all 0.3s;box-shadow:0 8px 20px rgba(255,255,255,0.3);
+}
+button:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(255,255,255,0.4);}
 .hidden{display:none;}
 
+/* ===== DIASHOW – FIXES ===== */
 .slide-container{
-position:relative;
-height:500px;
-overflow:hidden;
-margin:20px 0;
+  position:relative;
+  width:100%;
+  height:70vh;        /* war: height500px (fehlerhaft) – jetzt 70% Viewport-Höhe */
+  overflow:hidden;
+  margin:20px 0;
+  background:rgba(0,0,0,0.2);
+  border-radius:15px;
 }
-
 .slide{
-position:absolute;
-inset:0;
-display:none;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-gap:10px;
+  position:absolute;
+  inset:0;
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  padding:10px;
+  box-sizing:border-box;
 }
-
 .slide.active{
-display:flex;
+  display:flex;
 }
-
 .slide-img{
-max-height:90%;
-max-width:98%;
-object-fit:contain;
-border-radius:15px;
-box-shadow:0 20px 40px rgba(0,0,0,0.4);
+  max-height:calc(70vh - 80px); /* Platz für Text lassen */
+  max-width:100%;
+  width:auto;
+  height:auto;
+  object-fit:contain;           /* ganzes Bild sichtbar, kein Abschneiden */
+  border-radius:15px;
+  box-shadow:0 20px 40px rgba(0,0,0,0.4);
+  display:block;
 }
-
 .slide-text{
-background:rgba(0,0,0,0.7);
-padding:15px 25px;
-border-radius:20px;
-font-size:1.1rem;
-max-width:90%;
-margin:0;
+  background:rgba(0,0,0,0.7);
+  padding:10px 20px;
+  border-radius:20px;
+  font-size:1rem;
+  max-width:90%;
+  margin:0;
+  flex-shrink:0;
 }
+/* ===== ENDE DIASHOW ===== */
 
-/* MEMORY */
+.dots{display:flex;justify-content:center;gap:10px;margin:20px 0;}
+.dot{width:14px;height:14px;border-radius:50%;background:#fff;opacity:0.6;cursor:pointer;transition:all 0.3s;}
+.dot.active{opacity:1;background:#764ba2;transform:scale(1.2);}
 
+.game-container{margin:30px 0;position:relative;}
 .memory-grid{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:15px;
-max-width:500px;
-margin:20px auto;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:15px;
+  max-width:500px;
+  margin:20px auto;
+  position:relative;
+  z-index:1;
 }
-
 .memory-card{
-aspect-ratio:3/4;
-cursor:pointer;
-position:relative;
-height:120px;
-transition:transform 0.6s ease;
-transform-style:preserve-3d;
+  aspect-ratio:3/4;
+  cursor:pointer;
+  position:relative;
+  height:120px;
+  transition:transform 0.6s ease;
+  transform-style:preserve-3d;
+  box-shadow:0 8px 20px rgba(0,0,0,0.3);
 }
-
-.memory-card.flipped{
-transform:rotateY(180deg);
-}
-
-.memory-card.matched{
-opacity:0.3;
-cursor:default;
-}
-
+.memory-card.flipped{transform:rotateY(180deg);}
+.memory-card.matched{opacity:0.3;cursor:default;background:rgba(0,0,0,0.7) !important;}
 .card-face{
-position:absolute;
-width:100%;
-height:100%;
-backface-visibility:hidden;
-display:flex;
-align-items:center;
-justify-content:center;
-border-radius:12px;
-font-size:2rem;
+  position:absolute;
+  width:100%;
+  height:100%;
+  backface-visibility:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:12px;
+  font-size:2rem;
+  font-weight:bold;
 }
-
-.card-back{
-background:linear-gradient(135deg,#ff6b6b,#4ecdc4);
+.card-back{background:linear-gradient(135deg,#ff6b6b,#4ecdc4);box-shadow:inset 0 0 20px rgba(255,255,255,0.2);}
+.card-front{background:rgba(255,255,255,0.95);transform:rotateY(180deg);}
+.game-text{font-size:1.3rem;margin:20px;}
+.progress{font-size:1.2rem;margin-top:10px;}
+.sentence-progress{
+  font-size:1.4rem;
+  font-weight:bold;
+  margin:20px 0;
+  min-height:40px;
+  background:rgba(255,255,255,0.2);
+  padding:15px;
+  border-radius:15px;
 }
-
-.card-front{
-background:white;
-transform:rotateY(180deg);
+.final-animation{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  pointer-events:none;z-index:10;display:flex;align-items:center;justify-content:center;
 }
-
+@keyframes popInGlow {
+  0%{transform:scale(0) rotate(-10deg);opacity:0;filter:blur(5px);}
+  50%{transform:scale(1.3) rotate(2deg);opacity:1;text-shadow:0 0 40px #ffd700,0 0 60px #ff6b6b;filter:blur(0px);}
+  100%{transform:scale(1) rotate(0deg);opacity:1;text-shadow:0 0 30px #ffd700,0 0 50px #ff6b6b;filter:blur(0px);}
+}
+.pop-animation{
+  animation:popInGlow 1.5s ease-out;
+  font-size:clamp(3rem,10vw,6rem) !important;
+  font-weight:900 !important;
+  color:#ffd700 !important;
+  text-shadow:0 0 30px #ffd700,0 0 50px #ff6b6b;
+  letter-spacing:0.1em;
+}
 .gift-img{
-max-width:100%;
-border-radius:20px;
-margin:20px 0;
+  max-width:100%;height:auto;border-radius:20px;
+  box-shadow:0 20px 40px rgba(0,0,0,0.5);margin:20px 0;
 }
-
+@media (max-width:480px){
+  .memory-grid{grid-template-columns:repeat(4,70px);gap:10px;}
+  .memory-card{height:95px;}
+  .slide-container{height:50vh;}
+  .slide-img{max-height:calc(50vh - 70px);}
+}
 </style>
 </head>
-
 <body>
-
 <div class="container">
+  <div id="start">
+    <h1>🎉 Eine kleine Überraschung ❤️</h1>
+    <p>Dieses Wochenende wartet ein kleines Abenteuer auf uns.</p>
+    <button onclick="showTrip()">Zeig mir mehr →</button>
+  </div>
 
-<div id="start">
-<h1>🎉 Eine kleine Überraschung ❤️</h1>
-<p>Dieses Wochenende wartet ein kleines Abenteuer auf uns.</p>
-<button onclick="showTrip()">Zeig mir mehr →</button>
-</div>
+  <div id="trip" class="hidden">
+    <h1>Unser Wochenendtrip ❤️</h1>
+    <p>Nur wir zwei. Ein Wochenende voller Erinnerungen.</p>
+    <div class="slide-container" id="gallery"></div>
+    <div class="dots" id="dots"></div>
+    <button id="giftButton" onclick="startGame()" class="hidden" style="margin-top:30px;">Geschenk öffnen! 🎁</button>
+  </div>
 
-<div id="trip" class="hidden">
-
-<h1>Unser Wochenendtrip ❤️</h1>
-<p>Nur wir zwei. Ein Wochenende voller Erinnerungen.</p>
-
-<div class="slide-container" id="gallery"></div>
-
-<button id="giftButton" onclick="startGame()" class="hidden">
-Geschenk öffnen! 🎁
-</button>
-
-</div>
-
-<div id="game" class="hidden">
-
-<h1>🧠 Memory – Nur Rückseiten!</h1>
-
-<div class="memory-grid" id="memoryGrid"></div>
-
-<p id="progressText">Paare gefunden: 0 / 6</p>
-
-<p id="gameStatus"></p>
-
-</div>
-
+  <div id="game" class="hidden game-container">
+    <h1>🧠 Memory – Nur Rückseiten!</h1>
+    <p class="game-text">
+      Klicke zwei gleiche Karten. Symbole nur 1 Sek sichtbar!<br>
+      ❤️ Unser Geheimnis...
+    </p>
+    <div style="position:relative;">
+      <div class="memory-grid" id="memoryGrid"></div>
+      <div id="finalAnim" class="final-animation hidden"></div>
+    </div>
+    <p id="progressText" class="progress">Paare gefunden: 0 / 6</p>
+    <div id="sentenceProgress" class="sentence-progress"> </div>
+    <p id="gameStatus" class="game-text"></p>
+    <button onclick="resetGame()" class="hidden" id="resetBtn">Nochmal spielen</button>
+  </div>
 </div>
 
 <script>
-
-/* SLIDESHOW */
-
 const slides = [
-{img:'Bild1.jpeg',text:'Tag 1: Unsere Anreise – das Abenteuer beginnt ❤️'},
-{img:'Bild2.jpeg',text:'Der erste Sonnenuntergang zusammen'},
-{img:'bild3.jpg',text:'Unser Lieblingsmoment am See'}
+  {img:'Bild1.jpeg', text:'Tag 1: Unsere Anreise – das Abenteuer beginnt ❤️'},
+  {img:'Bild2.jpeg', text:'Der erste Sonnenuntergang zusammen'},
+  {img:'bild3.jpg',  text:'Unser Lieblingsmoment am See'},
+  {img:'bild4.jpg',  text:'Spaziergang Hand in Hand'},
+  {img:'Bild5.jpeg', text:'Das leckerste Eis ever! 🍦'},
+  {img:'Bild6.jpeg', text:'Abendstimmung zu zweit'},
+  {img:'Bild7.jpeg', text:'Unser Geheimtipp-Aussichtspunkt'},
+  {img:'Bild8.jpeg', text:'Lachen bis der Bauch weh tut'},
+  {img:'Bild9.jpeg', text:'Der Moment, der alles perfekt machte'},
+  {img:'Bild10.jpeg',text:'Bis bald – nächstes Abenteuer wartet! 💕'}
 ];
 
-let currentSlide=0;
+let currentSlide = 0;
+let slideInterval;
+const sentenceWords = ["Wir","freuen uns,","schau","mer","mal","was wird."];
+let foundWords = [];
 
 function showTrip(){
-
-document.getElementById("start").classList.add("hidden");
-document.getElementById("trip").classList.remove("hidden");
-
-initGallery();
-
+  document.getElementById('start').classList.add('hidden');
+  document.getElementById('trip').classList.remove('hidden');
+  initGallery();
+  slideInterval = setInterval(nextSlide, 10000);
 }
 
 function initGallery(){
-
-const container=document.getElementById("gallery");
-
-slides.forEach((slide,index)=>{
-
-const div=document.createElement("div");
-
-div.className="slide active";
-
-div.innerHTML=`
-<img class="slide-img" src="${slide.img}">
-<div class="slide-text">${slide.text}</div>
-`;
-
-container.appendChild(div);
-
-});
-
-document.getElementById("giftButton").classList.remove("hidden");
-
+  const container = document.getElementById('gallery');
+  const dots = document.getElementById('dots');
+  container.innerHTML = '';
+  dots.innerHTML = '';
+  slides.forEach((slide, index) => {
+    const slideDiv = document.createElement('div');
+    slideDiv.className = 'slide' + (index === 0 ? ' active' : '');
+    slideDiv.innerHTML = `
+      <img class="slide-img" src="${slide.img}" alt="${slide.text}">
+      <div class="slide-text">${slide.text}</div>
+    `;
+    container.appendChild(slideDiv);
+    const dot = document.createElement('span');
+    dot.classList.add('dot');
+    if(index === 0) dot.classList.add('active');
+    dot.onclick = () => goToSlide(index);
+    dots.appendChild(dot);
+  });
 }
 
-/* MEMORY */
+function updateSlides(){
+  document.querySelectorAll('.slide-container .slide').forEach((s,i) => s.classList.toggle('active', i === currentSlide));
+  document.querySelectorAll('.dot').forEach((d,i) => d.classList.toggle('active', i === currentSlide));
+  if(currentSlide === slides.length - 1){
+    setTimeout(() => document.getElementById('giftButton').classList.remove('hidden'), 500);
+  }
+}
 
-let flippedCards=[];
-let matchedPairs=0;
+function nextSlide(){
+  currentSlide = (currentSlide + 1) % slides.length;
+  updateSlides();
+}
+
+function goToSlide(index){
+  currentSlide = index;
+  updateSlides();
+}
+
+// Memory
+let flippedCards = [], matchedPairs = 0, lockBoard = false;
+const totalPairs = 6;
 
 function startGame(){
-
-document.getElementById("trip").classList.add("hidden");
-document.getElementById("game").classList.remove("hidden");
-
-initMemoryGame();
-
+  document.getElementById('trip').classList.add('hidden');
+  document.getElementById('game').classList.remove('hidden');
+  clearInterval(slideInterval);
+  initMemoryGame();
 }
 
 function initMemoryGame(){
-
-const symbols=['❤️','❤️','🌹','🌹','💋','💋','💍','💍','🌅','🌅','🍦','🍦'];
-symbols.sort(()=>Math.random()-0.5);
-
-const grid=document.getElementById("memoryGrid");
-
-grid.innerHTML='';
-matchedPairs=0;
-
-symbols.forEach(symbol=>{
-
-const card=document.createElement("div");
-
-card.className="memory-card";
-card.dataset.symbol=symbol;
-
-card.innerHTML=`
-<div class="card-face card-back">?</div>
-<div class="card-face card-front">${symbol}</div>
-`;
-
-card.addEventListener("click",flipCard);
-
-grid.appendChild(card);
-
-});
-
+  matchedPairs = 0; foundWords = []; flippedCards = []; lockBoard = false;
+  const grid = document.getElementById('memoryGrid');
+  const symbols = ['❤️','❤️','🌹','🌹','💋','💋','💍','💍','🌅','🌅','🍦','🍦'];
+  symbols.sort(() => Math.random() - 0.5);
+  grid.innerHTML = '';
+  symbols.forEach(symbol => {
+    const card = document.createElement('div');
+    card.className = 'memory-card';
+    card.dataset.symbol = symbol;
+    card.innerHTML = `
+      <div class="card-face card-back">?</div>
+      <div class="card-face card-front">${symbol}</div>
+    `;
+    card.addEventListener('click', flipCard);
+    grid.appendChild(card);
+  });
+  document.getElementById('progressText').textContent = `Paare gefunden: 0 / ${totalPairs}`;
+  document.getElementById('sentenceProgress').textContent = '';
+  document.getElementById('gameStatus').textContent = '';
+  document.getElementById('resetBtn').classList.add('hidden');
+  document.getElementById('finalAnim').classList.add('hidden');
 }
 
 function flipCard(){
-
-if(this.classList.contains("flipped")) return;
-
-this.classList.add("flipped");
-
-flippedCards.push(this);
-
-if(flippedCards.length===2){
-
-if(flippedCards[0].dataset.symbol===flippedCards[1].dataset.symbol){
-
-matchedPairs++;
-flippedCards=[];
-
-document.getElementById("progressText").textContent =
-`Paare gefunden: ${matchedPairs} / 6`;
-
-if(matchedPairs===6){
-
-document.getElementById("gameStatus").innerHTML=
-`🎉 Alle Paare gefunden!<br><img src="Bild1.jpeg" class="gift-img">`;
-
+  if(lockBoard || this.classList.contains('flipped') || this.classList.contains('matched')) return;
+  this.classList.add('flipped');
+  flippedCards.push(this);
+  if(flippedCards.length === 2){ lockBoard = true; checkMatch(); }
 }
 
-}else{
-
-setTimeout(()=>{
-flippedCards.forEach(c=>c.classList.remove("flipped"));
-flippedCards=[];
-},1000);
-
+function checkMatch(){
+  const [c1, c2] = flippedCards;
+  if(c1.dataset.symbol === c2.dataset.symbol){
+    c1.classList.add('matched'); c2.classList.add('matched');
+    matchedPairs++;
+    document.getElementById('progressText').textContent = `Paare gefunden: ${matchedPairs} / ${totalPairs}`;
+    if(foundWords.length < sentenceWords.length){
+      foundWords.push(sentenceWords[foundWords.length]);
+      updateSentenceProgress();
+    }
+    flippedCards = []; lockBoard = false;
+    if(matchedPairs === totalPairs){ setTimeout(showFinalAnimation, 800); }
+  } else {
+    setTimeout(() => {
+      c1.classList.remove('flipped'); c2.classList.remove('flipped');
+      flippedCards = []; lockBoard = false;
+    }, 1000);
+  }
 }
 
+function updateSentenceProgress(){
+  const sp = document.getElementById('sentenceProgress');
+  sp.textContent = foundWords.join(' ');
+  sp.style.color = foundWords.length === sentenceWords.length ? '#ffd700' : 'white';
 }
 
+function showFinalAnimation(){
+  const fa = document.getElementById('finalAnim');
+  fa.innerHTML = '<div class="pop-animation">Was wird!</div>';
+  fa.classList.remove('hidden');
+  setTimeout(() => {
+    fa.classList.add('hidden');
+    document.getElementById('gameStatus').innerHTML = `
+      🎉 Alle Paare gefunden!<br>Hier ist dein Geschenk:<br><br>
+      <img src="Bild1.jpeg" class="gift-img" alt="Dein Gutschein">
+    `;
+    document.getElementById('resetBtn').classList.remove('hidden');
+  }, 2500);
 }
 
+function resetGame(){
+  document.getElementById('game').classList.add('hidden');
+  document.getElementById('trip').classList.remove('hidden');
+  document.getElementById('giftButton').classList.add('hidden');
+  currentSlide = 0;
+  updateSlides();
+  slideInterval = setInterval(nextSlide, 10000);
+}
 </script>
-
 </body>
-</html
+</html>
+

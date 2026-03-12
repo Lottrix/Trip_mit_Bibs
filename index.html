@@ -4,26 +4,31 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Unser Wochenendtrip ❤️</title>
-
 <style>
-
 body{
 margin:0;
-font-family:Arial;
+font-family:Arial, sans-serif;
 background:linear-gradient(135deg,#667eea,#764ba2);
 color:white;
 text-align:center;
 display:flex;
 justify-content:center;
 align-items:center;
-height:100vh;
+min-height:100vh;
+padding:20px;
+box-sizing:border-box;
 }
-
 .container{
 max-width:500px;
+width:100%;
 padding:30px;
+background:rgba(255,255,255,0.1);
+backdrop-filter:blur(10px);
+border-radius:20px;
+box-shadow:0 20px 40px rgba(0,0,0,0.3);
 }
-
+h1{font-size:clamp(1.8rem,5vw,2.5rem);margin-bottom:20px;}
+p{font-size:1.1rem;line-height:1.6;margin-bottom:20px;}
 button{
 padding:15px 30px;
 border:none;
@@ -33,64 +38,43 @@ cursor:pointer;
 background:white;
 color:#764ba2;
 margin-top:20px;
+font-weight:600;
+transition:all 0.3s ease;
+box-shadow:0 8px 20px rgba(255,255,255,0.3);
 }
-
-.hidden{
-display:none;
-}
-
+button:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(255,255,255,0.4);}
+.hidden{display:none;}
 img{
 width:100%;
+max-width:400px;
 border-radius:15px;
 margin-top:15px;
+box-shadow:0 15px 30px rgba(0,0,0,0.4);
 }
-
+@media (max-width:480px){.container{padding:20px;}}
 </style>
 </head>
-
 <body>
-
 <div class="container">
-
 <div id="start">
-
-<h1>Eine kleine Überraschung ❤️</h1>
-
-<p>
-Dieses Wochenende wartet ein kleines Abenteuer auf uns.
-</p>
-
-<button onclick="showTrip()">Zeig mir mehr</button>
-
+<h1>🎉 Eine kleine Überraschung ❤️</h1>
+<p>Dieses Wochenende wartet ein kleines Abenteuer auf uns.</p>
+<button onclick="showTrip()">Zeig mir mehr →</button>
 </div>
-
 <div id="trip" class="hidden">
-
-<h1>Wochenendtrip KW 16</h1>
-
-<p>
-Nur wir zwei.  
-Ein Wochenende voller Erinnerungen.
-</p>
-
-<p>
-Ich freue mich unglaublich auf die Zeit mit dir ❤️
-</p>
-
-<img src="trip.jpg">
-
+<h1>🌟 Wochenendtrip KW 16</h1>
+<p>Nur wir zwei.<br>Ein Wochenende voller Erinnerungen.</p>
+<p>Ich freue mich unglaublich auf die Zeit mit dir ❤️</p>
+<img src="trip.jpg" alt="Unser Trip-Ziel" onerror="this.src='https://via.placeholder.com/400x250/764ba2/fff?text=Trip+Bild';">
 </div>
-
 </div>
-
 <script>
-
 function showTrip(){
 document.getElementById("start").style.display="none";
 document.getElementById("trip").style.display="block";
+document.querySelector('h1').scrollIntoView({behavior:'smooth'});
 }
-
 </script>
-
 </body>
 </html>
+

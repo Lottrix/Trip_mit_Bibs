@@ -28,115 +28,47 @@ border-radius:20px;
 box-shadow:0 20px 40px rgba(0,0,0,0.3);
 }
 
-h1{
-font-size:clamp(1.6rem,4.5vw,2.2rem);
-margin-bottom:20px;
-}
-
-p{
-font-size:1.2rem;
-line-height:1.6;
-margin-bottom:20px;
-}
-
-button{
-padding:15px 30px;
-border:none;
-border-radius:30px;
-font-size:18px;
-cursor:pointer;
-background:white;
-color:#764ba2;
-margin:20px;
-font-weight:600;
-transition:all 0.3s;
-box-shadow:0 8px 20px rgba(255,255,255,0.3);
-}
-
-button:hover{
-transform:translateY(-2px);
-box-shadow:0 12px 25px rgba(255,255,255,0.4);
-}
-
-.hidden{
-display:none;
-}
-
-/* Slideshow */
+.hidden{display:none;}
 
 .slide-container{
 position:relative;
-height:650px;
+height:500px;
+overflow:hidden;
 margin:20px 0;
 }
 
 .slide{
 position:absolute;
 inset:0;
-display:flex;
+display:none;
 flex-direction:column;
 align-items:center;
-justify-content:flex-start;
-opacity:0;
-transition:opacity 1.2s;
+justify-content:center;
+gap:10px;
 }
 
 .slide.active{
-opacity:1;
-}
-
-@keyframes zoom{
-0%{transform:scale(1);}
-100%{transform:scale(1.08);}
+display:flex;
 }
 
 .slide-img{
-width:100%;
-height:80%;
+max-height:90%;
+max-width:98%;
 object-fit:contain;
 border-radius:15px;
 box-shadow:0 20px 40px rgba(0,0,0,0.4);
-animation:zoom 10s linear;
 }
 
 .slide-text{
-background:rgba(0,0,0,0.6);
-padding:12px 20px;
-border-radius:18px;
+background:rgba(0,0,0,0.7);
+padding:15px 25px;
+border-radius:20px;
 font-size:1.1rem;
 max-width:90%;
-margin-top:10px;
+margin:0;
 }
 
-.dots{
-display:flex;
-justify-content:center;
-gap:10px;
-margin:20px 0;
-}
-
-.dot{
-width:14px;
-height:14px;
-border-radius:50%;
-background:#fff;
-opacity:0.6;
-cursor:pointer;
-transition:all 0.3s;
-}
-
-.dot.active{
-opacity:1;
-background:#764ba2;
-transform:scale(1.2);
-}
-
-/* Memory Game */
-
-.game-container{
-margin:30px 0;
-position:relative;
-}
+/* MEMORY */
 
 .memory-grid{
 display:grid;
@@ -153,7 +85,6 @@ position:relative;
 height:120px;
 transition:transform 0.6s ease;
 transform-style:preserve-3d;
-box-shadow:0 8px 20px rgba(0,0,0,0.3);
 }
 
 .memory-card.flipped{
@@ -175,7 +106,6 @@ align-items:center;
 justify-content:center;
 border-radius:12px;
 font-size:2rem;
-font-weight:bold;
 }
 
 .card-back{
@@ -191,29 +121,6 @@ transform:rotateY(180deg);
 max-width:100%;
 border-radius:20px;
 margin:20px 0;
-}
-
-/* Mobile */
-
-@media (max-width:480px){
-
-.slide-container{
-height:460px;
-}
-
-.slide-img{
-height:75%;
-}
-
-.memory-grid{
-grid-template-columns:repeat(4,70px);
-gap:10px;
-}
-
-.memory-card{
-height:95px;
-}
-
 }
 
 </style>
@@ -235,7 +142,6 @@ height:95px;
 <p>Nur wir zwei. Ein Wochenende voller Erinnerungen.</p>
 
 <div class="slide-container" id="gallery"></div>
-<div class="dots" id="dots"></div>
 
 <button id="giftButton" onclick="startGame()" class="hidden">
 Geschenk öffnen! 🎁
@@ -243,11 +149,9 @@ Geschenk öffnen! 🎁
 
 </div>
 
+<div id="game" class="hidden">
 
-<div id="game" class="hidden game-container">
-
-<h1>🧠 Memory</h1>
-<p>Finde alle Paare ❤️</p>
+<h1>🧠 Memory – Nur Rückseiten!</h1>
 
 <div class="memory-grid" id="memoryGrid"></div>
 
@@ -255,104 +159,63 @@ Geschenk öffnen! 🎁
 
 <p id="gameStatus"></p>
 
-<button onclick="resetGame()" class="hidden" id="resetBtn">Nochmal spielen</button>
-
 </div>
 
 </div>
-
 
 <script>
 
-const slides=[
+/* SLIDESHOW */
+
+const slides = [
 {img:'Bild1.jpeg',text:'Tag 1: Unsere Anreise – das Abenteuer beginnt ❤️'},
 {img:'Bild2.jpeg',text:'Der erste Sonnenuntergang zusammen'},
-{img:'bild3.jpg',text:'Unser Lieblingsmoment am See'},
-{img:'bild4.jpg',text:'Spaziergang Hand in Hand'},
-{img:'Bild5.jpeg',text:'Das leckerste Eis ever! 🍦'},
-{img:'Bild6.jpeg',text:'Abendstimmung zu zweit'},
-{img:'Bild7.jpeg',text:'Unser Geheimtipp-Aussichtspunkt'},
-{img:'Bild8.jpeg',text:'Lachen bis der Bauch weh tut'},
-{img:'Bild9.jpeg',text:'Der Moment, der alles perfekt machte'},
-{img:'Bild10.jpeg',text:'Bis bald – nächstes Abenteuer wartet! 💕'}
+{img:'bild3.jpg',text:'Unser Lieblingsmoment am See'}
 ];
 
 let currentSlide=0;
-let slideInterval;
 
 function showTrip(){
-document.getElementById('start').classList.add('hidden');
-document.getElementById('trip').classList.remove('hidden');
+
+document.getElementById("start").classList.add("hidden");
+document.getElementById("trip").classList.remove("hidden");
+
 initGallery();
-slideInterval=setInterval(nextSlide,10000);
+
 }
 
 function initGallery(){
 
-const container=document.getElementById('gallery');
-const dots=document.getElementById('dots');
-
-container.innerHTML='';
-dots.innerHTML='';
+const container=document.getElementById("gallery");
 
 slides.forEach((slide,index)=>{
 
-const slideDiv=document.createElement('div');
-slideDiv.className='slide'+(index===0?' active':'');
+const div=document.createElement("div");
 
-slideDiv.innerHTML=`
+div.className="slide active";
+
+div.innerHTML=`
 <img class="slide-img" src="${slide.img}">
 <div class="slide-text">${slide.text}</div>
 `;
 
-container.appendChild(slideDiv);
-
-const dot=document.createElement('span');
-dot.classList.add('dot');
-if(index===0)dot.classList.add('active');
-dot.onclick=()=>goToSlide(index);
-dots.appendChild(dot);
+container.appendChild(div);
 
 });
 
-}
-
-function updateSlides(){
-
-const slideDivs=document.querySelectorAll('.slide');
-const dotElems=document.querySelectorAll('.dot');
-
-slideDivs.forEach((s,i)=>s.classList.toggle('active',i===currentSlide));
-dotElems.forEach((d,i)=>d.classList.toggle('active',i===currentSlide));
-
-if(currentSlide===slides.length-1){
-setTimeout(()=>{
-document.getElementById('giftButton').classList.remove('hidden');
-},500);
-}
+document.getElementById("giftButton").classList.remove("hidden");
 
 }
 
-function nextSlide(){
-currentSlide=(currentSlide+1)%slides.length;
-updateSlides();
-}
-
-function goToSlide(index){
-currentSlide=index;
-updateSlides();
-}
-
-/* Memory Game */
+/* MEMORY */
 
 let flippedCards=[];
 let matchedPairs=0;
-const totalPairs=6;
 
 function startGame(){
 
-document.getElementById('trip').classList.add('hidden');
-document.getElementById('game').classList.remove('hidden');
+document.getElementById("trip").classList.add("hidden");
+document.getElementById("game").classList.remove("hidden");
 
 initMemoryGame();
 
@@ -363,15 +226,16 @@ function initMemoryGame(){
 const symbols=['❤️','❤️','🌹','🌹','💋','💋','💍','💍','🌅','🌅','🍦','🍦'];
 symbols.sort(()=>Math.random()-0.5);
 
-const grid=document.getElementById('memoryGrid');
+const grid=document.getElementById("memoryGrid");
 
 grid.innerHTML='';
 matchedPairs=0;
 
 symbols.forEach(symbol=>{
 
-const card=document.createElement('div');
-card.className='memory-card';
+const card=document.createElement("div");
+
+card.className="memory-card";
 card.dataset.symbol=symbol;
 
 card.innerHTML=`
@@ -379,7 +243,7 @@ card.innerHTML=`
 <div class="card-face card-front">${symbol}</div>
 `;
 
-card.addEventListener('click',flipCard);
+card.addEventListener("click",flipCard);
 
 grid.appendChild(card);
 
@@ -389,9 +253,10 @@ grid.appendChild(card);
 
 function flipCard(){
 
-if(this.classList.contains('flipped')) return;
+if(this.classList.contains("flipped")) return;
 
-this.classList.add('flipped');
+this.classList.add("flipped");
+
 flippedCards.push(this);
 
 if(flippedCards.length===2){
@@ -399,24 +264,23 @@ if(flippedCards.length===2){
 if(flippedCards[0].dataset.symbol===flippedCards[1].dataset.symbol){
 
 matchedPairs++;
-
 flippedCards=[];
 
-if(matchedPairs===totalPairs){
+document.getElementById("progressText").textContent =
+`Paare gefunden: ${matchedPairs} / 6`;
 
-document.getElementById('gameStatus').innerHTML=
-`🎉 Alle Paare gefunden!<br><br>
-<img src="Bild1.jpeg" class="gift-img">`;
+if(matchedPairs===6){
+
+document.getElementById("gameStatus").innerHTML=
+`🎉 Alle Paare gefunden!<br><img src="Bild1.jpeg" class="gift-img">`;
 
 }
 
 }else{
 
 setTimeout(()=>{
-
-flippedCards.forEach(c=>c.classList.remove('flipped'));
+flippedCards.forEach(c=>c.classList.remove("flipped"));
 flippedCards=[];
-
 },1000);
 
 }
@@ -425,13 +289,7 @@ flippedCards=[];
 
 }
 
-function resetGame(){
-location.reload();
-}
-
 </script>
 
 </body>
-</html>
-
-
+</html

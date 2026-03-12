@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Alles gute zu deinem Geburtstag Bibs ❤️</title>
+<title>Alles Gute zu deinem Geburtstag, Bibs ❤️</title>
 <style>
 body{
   margin:0;
@@ -195,13 +195,6 @@ button:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(255,255,255,
   text-shadow:0 0 30px #ffd700,0 0 50px #ff6b6b;
   letter-spacing:0.1em;
 }
-.gift-img{
-  max-width:100%;
-  height:auto;
-  border-radius:20px;
-  box-shadow:0 20px 40px rgba(0,0,0,0.5);
-  margin:20px 0;
-}
 .gift-video{
   width:100%;
   max-width:700px;
@@ -237,13 +230,13 @@ button:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(255,255,255,
 <div class="container">
   <div id="start">
     <h1>🎉 Eine kleine Überraschung ❤️</h1>
-    <p>Ich weiß, dass du es nicht mags wenn ich irgendetwas Programmiere. Aber da musst du jetzt leider durch!</p>
+    <p>Ich weiß, dass du es nicht magst, wenn ich irgendetwas programmiere. Aber da musst du jetzt leider durch!</p>
     <button onclick="showTrip()">Rücke vor auf Los →</button>
   </div>
 
   <div id="trip" class="hidden">
-    <h1>Alles gute zu deinem Geburtstag! ❤️</h1>
-    <p>Da wir jetzt schon fast ein altes Ehepaar sind bekommst du von mir einen kleinen Recap. Ich freu mich weitere Momente mit dir zu erschaffen!</p>
+    <h1>Alles Gute zu deinem Geburtstag! ❤️</h1>
+    <p>Da wir jetzt schon fast ein altes Ehepaar sind, bekommst du von mir einen kleinen Recap. Ich freue mich darauf, weitere Momente mit dir zu erschaffen!</p>
     <div class="slide-container" id="gallery"></div>
     <div class="dots" id="dots"></div>
     <button id="giftButton" onclick="startGame()" class="hidden" style="margin-top:30px;">Spiel beginnen! 🎁</button>
@@ -252,7 +245,7 @@ button:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(255,255,255,
   <div id="game" class="hidden game-container">
     <h1>🧠 Löse das Memory!</h1>
     <p class="game-text">
-      Die Spielregeln brauch ich hoffentlich nicht erklären...<br>
+      Die Spielregeln brauche ich hoffentlich nicht zu erklären...<br>
     </p>
 
     <div style="position:relative;">
@@ -270,17 +263,17 @@ button:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(255,255,255,
 <script>
 const slides = [
   {img:'Bild1.jpeg', text:'So habe ich dich geschenkt bekommen'},
-  {img:'Bild2.jpeg', text:'Im laufe der Jahre waren wir oft müde'},
+  {img:'Bild2.jpeg', text:'Im Laufe der Jahre waren wir oft müde'},
   {img:'Bild3.jpeg', text:'und mussten einfach schlafen: manchmal süß,'},
   {img:'Bildschalf.jpeg', text:'manchmal echt komisch'},
-  {img:'Bild4.jpeg', text:'aber meistens wie n Babo!'},
+  {img:'Bild4.jpeg', text:'aber meistens wie ein Babo!'},
   {img:'Bild5.jpeg', text:'Jedoch haben wir uns immer wieder aufgerappelt und gemeinsame Erinnerungen gesammelt!'},
-  {img:'Bild6.jpeg', text:'zwischendurch sport gemacht,'},
+  {img:'Bild6.jpeg', text:'zwischendurch Sport gemacht,'},
   {img:'Bild7.jpeg', text:'getanzt,'},
   {img:'Bild8.jpeg', text:'Stahlbauten angeschaut'},
-  {img:'Bild9.jpeg', text:'und das ein odere andere Kaltgetränk geschlürft.'},
+  {img:'Bild9.jpeg', text:'und das ein oder andere Kaltgetränk geschlürft.'},
   {img:'Bild10.jpeg', text:'Da bekommt sogar Linus Bock!'},
-  {img:'Bild11.jpeg', text:'Du auch? Dann starte das Spiel!❤️'}
+  {img:'Bild11.jpeg', text:'Du auch? Dann starte das Spiel! ❤️'}
 ];
 
 let currentSlide = 0;
@@ -430,15 +423,15 @@ function showFinalAnimation(){
   setTimeout(() => {
     fa.classList.add('hidden');
     document.getElementById('gameStatus').innerHTML = `
-      🎉 Beste du hast es geschafft!<br><br>
-      <video class="gift-video" controls playsinline>
+      🎉 Beste, du hast es geschafft!<br><br>
+      <video class="gift-video" autoplay loop muted controls playsinline>
         <source src="Urlaub.mp4" type="video/mp4">
         Dein Browser unterstützt dieses Video nicht.
       </video>
       <p style="font-size:1.15rem; line-height:1.6; margin-top:20px;">
-        ❤️ Das ist mein Versprechen für einen Urlaub im Sommer.<br><br>
+        ❤️ Das ist mein Geschenk und gleichzeitig mein Versprechen für einen Urlaub im Sommer.<br><br>
         Das Urlaubsziel und die genaue Zeit legen wir noch gemeinsam in Ruhe fest.<br><br>
-        Die Reisekosten zum gewählten Ziel übernehme ich – egal ob mit dem Auto oder mit dem Flugzeug.
+        Die Reisekosten zum gewählten Ziel übernehme ich – egal, ob mit dem Auto oder mit dem Flugzeug.
       </p>
     `;
     document.getElementById('resetBtn').classList.remove('hidden');

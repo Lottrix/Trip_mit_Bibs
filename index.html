@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -70,13 +69,15 @@ button:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(255,255,255,
 .dot.active{opacity:1;background:#764ba2;transform:scale(1.2);}
 
 /* Memory-Verbesserungen */
-.game-container{margin:30px 0;}
+.game-container{margin:30px 0;position:relative;}
 .memory-grid{
   display:grid;
   grid-template-columns:repeat(4,1fr);
   gap:15px;
   max-width:500px;
   margin:20px auto;
+  position:relative;
+  z-index:1;
 }
 .memory-card{
   aspect-ratio:3/4;
@@ -91,7 +92,7 @@ button:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(255,255,255,
   transform:rotateY(180deg);
 }
 .memory-card.matched{
-  opacity:0.3; /* Dunkel werden */
+  opacity:0.3;
   cursor:default;
   background: rgba(0,0,0,0.7) !important;
 }
@@ -126,17 +127,49 @@ button:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(255,255,255,
   padding:15px;
   border-radius:15px;
 }
-@keyframes popIn {
-  0% { transform: scale(0); opacity:0; }
-  50% { transform: scale(1.2); }
-  100% { transform: scale(1); opacity:1; }
+
+/* NEU: Finale Animation ÜBER den Karten */
+.final-animation{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+  z-index:10;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+@keyframes popInGlow {
+  0% { 
+    transform: scale(0) rotate(-10deg); 
+    opacity:0; 
+    text-shadow: 0 0 0 rgba(255,255,255,0);
+    filter: blur(5px);
+  }
+  50% { 
+    transform: scale(1.3) rotate(2deg); 
+    opacity:1; 
+    text-shadow: 0 0 40px #ffd700, 0 0 60px #ff6b6b;
+    filter: blur(0px);
+  }
+  100% { 
+    transform: scale(1) rotate(0deg); 
+    opacity:1; 
+    text-shadow: 0 0 30px #ffd700, 0 0 50px #ff6b6b;
+    filter: blur(0px);
+  }
 }
 .pop-animation {
-  animation: popIn 1s ease-out;
-  font-size:2.5rem !important;
-  font-weight:bold !important;
-  text-shadow: 0 0 20px rgba(255,255,255,0.8);
+  animation: popInGlow 1.5s ease-out;
+  font-size:clamp(3rem, 10vw, 6rem) !important;
+  font-weight:900 !important;
+  color:#ffd700 !important;
+  text-shadow: 0 0 30px #ffd700, 0 0 50px #ff6b6b;
+  letter-spacing:0.1em;
 }
+
 .gift-img{
   max-width:100%;
   height:auto;
@@ -176,7 +209,13 @@ button:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(255,255,255,
       Klicke zwei gleiche Karten. Symbole nur 1 Sek sichtbar!<br>
       ❤️ Unser Geheimnis...
     </p>
-    <div class="memory-grid" id="memoryGrid"></div>
+    
+    <!-- NEU: Container für Animation über Karten -->
+    <div style="position:relative;">
+      <div class="memory-grid" id="memoryGrid"></div>
+      <div id="finalAnim" class="final-animation hidden"></div>
+    </div>
+    
     <p id="progressText" class="progress">Paare gefunden: 0 / 6</p>
     <div id="sentenceProgress" class="sentence-progress">Satz: </div>
     <p id="gameStatus" class="game-text"></p>
@@ -201,8 +240,6 @@ const slides = [
 
 let currentSlide = 0;
 let slideInterval;
-
-// NEU: Satz-Wörter
 const sentenceWords = ["Wir", "freuen", "uns,", "schau", "mer", "mal", "was", "wird."];
 let foundWords = [];
 
@@ -253,7 +290,7 @@ function goToSlide(index){
   updateSlides();
 }
 
-// ----- Memory Game mit neuen Features -----
+// ----- Memory Game -----
 let flippedCards = [];
 let matchedPairs = 0;
 let lockBoard = false;
@@ -276,6 +313,7 @@ function initMemoryGame(){
   const sentenceProgress = document.getElementById('sentenceProgress');
   const gameStatus = document.getElementById('gameStatus');
   const resetBtn = document.getElementById('resetBtn');
+  const finalAnim = document.getElementById('finalAnim');
 
   const symbols = ['❤️','❤️','🌹','🌹','💋','💋','💍','💍','🌅','🌅','🍦','🍦'];
   symbols.sort(() => Math.random() - 0.5);
@@ -297,6 +335,7 @@ function initMemoryGame(){
   sentenceProgress.textContent = 'Satz: ';
   gameStatus.textContent = '';
   resetBtn.classList.add('hidden');
+  finalAnim.classList.add('hidden');
 }
 
 function flipCard(){
@@ -320,7 +359,6 @@ function checkMatch(){
     matchedPairs++;
     document.getElementById('progressText').textContent = `Paare gefunden: ${matchedPairs} / ${totalPairs}`;
     
-    // NEU: Wort hinzufügen (jedes Paar = 1 Wort)
     if(foundWords.length < sentenceWords.length){
       foundWords.push(sentenceWords[foundWords.length]);
       updateSentenceProgress();
@@ -351,18 +389,23 @@ function updateSentenceProgress(){
 }
 
 function showFinalAnimation(){
+  const finalAnim = document.getElementById('finalAnim');
   const gameStatus = document.getElementById('gameStatus');
-  gameStatus.innerHTML = '<div class="pop-animation">Was wird!</div>';
+  
+  // Animation ÜBER den Karten starten
+  finalAnim.innerHTML = '<div class="pop-animation">Was wird!</div>';
+  finalAnim.classList.remove('hidden');
   
   setTimeout(() => {
+    finalAnim.classList.add('hidden');
     gameStatus.innerHTML = `
       🎉 Alle Paare gefunden!<br>
       Hier ist dein Geschenk:
       <br><br>
-      <img src="Bild11.jpeg" class="gift-img" alt="Dein Gutschein">
+      <img src="Bild1.jpeg" class="gift-img" alt="Dein Gutschein">
     `;
     document.getElementById('resetBtn').classList.remove('hidden');
-  }, 2000);
+  }, 2500);
 }
 
 function resetGame(){
@@ -373,4 +416,3 @@ function resetGame(){
 </script>
 </body>
 </html>
-
